@@ -134,8 +134,6 @@ Stated as a rule:
 
 > **A container has no GPU hardware and no GPU driver.** Those are on the host. What the container *does* carry is every CUDA library, every framework, and every application file your program needs in order to drive the physical GPU that the host owns.
 
----
-
 ## 3. Core Concepts: Image vs Container vs Layer
 
 These three words get used interchangeably in casual conversation and they should not be. Here are the precise definitions from the session.
@@ -179,6 +177,9 @@ Every instruction that changes the filesystem — `RUN`, `COPY`, `ADD` — produ
 - **Cached** — if the inputs to a step haven't changed, Docker reuses the existing layer instead of re-executing the step.
 - **Shared** — if ten images all start `FROM nvidia/cuda:13.0.0-runtime-ubuntu24.04`, that multi-gigabyte base is stored **once** on disk and referenced ten times.
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/43c1e40a-03f6-41d1-beae-de003b68348a" />
+
+
 ### 3.4 Why layers matter *specifically* for AI
 
 This is the point the instructor flags as **"very very important."**
@@ -211,8 +212,6 @@ flowchart LR
     R -->|docker pull| I2["Same image,<br/>colleague's machine"]
     C1 -->|exits| X["Removed if --rm"]
 ```
-
----
 
 ## 4. Dockerfile vs Build Context, Layer vs Tag
 
@@ -299,8 +298,6 @@ CMD ["python3", "train.py"]
 > - **Base image supplies the CUDA userspace; the host supplies the driver.**
 > - **Dependencies before code:** editing `train.py` must not re-install PyTorch.
 
----
-
 ## 6. The CUDA Split: Driver vs Toolkit
 
 The slide title calls this **"the #1 source of confusion,"** and the instructor confirms it: *"a lot of people, when they start working with the GPUs, there is this confusion in terms of the driver as well as the toolkit."*
@@ -317,6 +314,8 @@ The slide title calls this **"the #1 source of confusion,"** and the instructor 
 | Talks to | The Linux kernel and the physical GPU | The driver, via the runtime hook |
 
 The reason the driver can never live inside the image is structural, not stylistic: a GPU driver includes a **kernel module**, and containers share the host kernel. A container cannot load its own kernel module, so it cannot carry its own driver. This is the answer to check-for-understanding question 1.
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8b84a4e6-41a7-4e15-8f4f-3f7277bfef76" />
 
 ### 6.2 The compatibility rule
 
@@ -387,6 +386,9 @@ The question the instructor poses: *"How is it that my GPU is going to reach the
 
 Step 2 is the trick. The container image never contained driver libraries; the hook *bind-mounts them in at container start*, from the host, at exactly the version the host is running. That is how the same image works on a machine with driver 580.15 and another with 580.82 — each gets its own host's libraries.
 
+<img width="1693" height="929" alt="image" src="https://github.com/user-attachments/assets/e2b31f1b-f8ac-42e5-a962-971c417d85ac" />
+
+
 ### 7.2 The sequence, end to end
 
 ```mermaid
@@ -433,8 +435,6 @@ sudo systemctl restart docker
 ```
 
 The middle line writes Docker's daemon configuration so that the `nvidia` runtime is registered. The third line is **not optional** — Docker reads that configuration at start-up, so without the restart, the toolkit is installed but invisible. Skipping it produces `could not select device driver "nvidia"`, which reads like a missing installation and is in fact a missing restart.
-
----
 
 ## 8. Tag Taxonomy: base / runtime / devel
 
@@ -485,6 +485,9 @@ Docker walks the Dockerfile top to bottom. For each step it asks: *have the inpu
 - **Yes** → rebuild this step **and every step below it**, unconditionally.
 
 That second clause is the whole game. The cache is not per-step-independent; **invalidation cascades downward**. One changed byte high in the file destroys every layer beneath it.
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/bf27afe4-4127-4f40-80f3-ac92528d17d0" />
+
 
 ### 9.2 Anti-pattern vs pattern
 
@@ -664,6 +667,8 @@ $ docker run --rm --gpus all gpu-hello
 ```
 
 Note the `--index-url https://download.pytorch.org/whl/cu130` — that suffix `cu130` means "the PyTorch wheel built against CUDA 13.0," matching the base image. Installing plain `pip install torch` from PyPI gives you whatever CUDA build is the current default, which may not match. This is the direct cause of the third failure mode in [Section 15](#15-debugging-playbook).
+
+<img width="1774" height="887" alt="image" src="https://github.com/user-attachments/assets/502d6998-563a-4513-9721-b2dab6d9d6aa" />
 
 ### 11.2 The actual repository Dockerfile
 
