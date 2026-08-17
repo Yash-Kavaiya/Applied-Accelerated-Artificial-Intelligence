@@ -279,6 +279,8 @@ Tools mentioned:
 - Minimise idle time
 - Keep the accelerator busy with useful work
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4cc88d71-8ac2-454c-a7f2-42d315d8b6a8" />
+
 ## 8. Quick Reference – Eager → Graph Transition
 
 ```python
