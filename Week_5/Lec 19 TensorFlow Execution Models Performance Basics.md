@@ -180,7 +180,7 @@ Let
 y = x^{2} + 3x + 2
 ```
 
-We want \(\frac{dy}{dx}\) evaluated at \(x = 3\).
+We want ($\frac{dy}{dx}$) evaluated at (x = 3).
 
 **Analytic derivative:**
 ```math
