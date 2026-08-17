@@ -119,6 +119,9 @@ x.T                   # for 2-D
 x.transpose(0, 1)     # general
 ```
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/7837f144-c79f-4434-92b8-3d2dc6f5a0db" />
+
+
 ### 1.6 Reshaping – Same Elements, New Interpretation
 
 Reshaping does **not** change the underlying data (when possible); it only changes how we interpret the shape.
@@ -183,6 +186,8 @@ flowchart LR
     style A fill:#e1f5fe
     style B fill:#c8e6c9
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2078c9a5-3aac-441a-989a-925a6d2152b0" />
+
 
 **Key insight:** The **values** stay the same; only the semantic meaning of each axis changes.
 
@@ -201,6 +206,7 @@ a = torch.ones(3, 4)   # shape (3, 4)
 b = torch.ones(4)      # shape (4,)  → treated as (1, 4)
 c = a + b              # shape (3, 4) — b is broadcast over the rows
 ```
+<img width="1402" height="1122" alt="image" src="https://github.com/user-attachments/assets/718aecc9-414d-4942-be09-68e2074acd7f" />
 
 **Image normalisation example (very common):**
 ```python
@@ -290,17 +296,7 @@ Every tensor operation creates a node in a **Directed Acyclic Graph (DAG)**.
 | **Non-leaf tensor** | Result of an operation. Does **not** retain `.grad` by default (saves memory). |
 | **`requires_grad=True`** | Instructs PyTorch to track all operations on this tensor. |
 
-```mermaid
-flowchart TD
-    W["w<br/>requires_grad=True<br/>(Leaf)"] --> Mul["×"]
-    X["x<br/>(constant)"] --> Mul
-    Mul --> Y["y = w·x"]
-    W --> Pow["w²"]
-    Pow --> Add["+"]
-    Y --> Add
-    Add --> L["L = y + w²<br/>(scalar)"]
-    L -->|backward| Grad["∂L/∂w = x + 2w"]
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a64f9999-429a-4728-b08d-211cf22dc699" />
 
 ### 2.3 Triggering Gradient Computation – Concrete Example
 
@@ -413,7 +409,8 @@ y.backward(torch.ones_like(y))   # equivalent to y.sum().backward()
 This computes the **vector-Jacobian product**.  
 **Best practice:** Always reduce your loss to a scalar (e.g. `.mean()` or `.sum()`) before calling `.backward()`.
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f1b9712b-0360-4b1b-bb47-e27c20161455" />
+
 
 ## 3. Segment 1 Summary
 
@@ -434,3 +431,4 @@ This computes the **vector-Jacobian product**.
 4. For inference, wrap the forward pass in `torch.no_grad()`.
 5. Remember that `.grad` accumulates — call `optimizer.zero_grad()` (or `model.zero_grad()`) at the start of every iteration.
 6. Prefer reducing the loss to a scalar before `.backward()`.
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/4e5e032a-76cd-4e29-8a79-058e0a777c69" />
