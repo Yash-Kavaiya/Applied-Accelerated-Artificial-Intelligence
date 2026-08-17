@@ -1,13 +1,6 @@
 # Docker Fundamentals for GPU-Enabled AI Workloads
 
-**Course:** Applied Accelerated AI — NPTEL
-**Module:** Week 2 — Containerized AI Systems
-**Session:** 1 of 4
-**Instructor:** Satyadhyan Chickerur, Ph.D., MBA(Edu.Mgmt), SMIEEE — Director, Centre for Artificial Intelligence Research; Professor, School of Computer Science & Engineering, KLE Technological University, BVB Campus, Vidyanagar, Hubballi – 580031, Karnataka, India
-
 > **The one-line thesis of this session:** *Containers freeze the entire userspace; the host keeps the kernel and the GPU driver. Everything else in this session is a consequence of that single split.*
-
----
 
 ## Table of Contents
 
@@ -31,8 +24,6 @@
 18. [Golden Rules — Cheat Sheet](#18-golden-rules--cheat-sheet)
 19. [What's Next](#19-whats-next)
 20. [Editorial Notes](#20-editorial-notes)
-
----
 
 ## 1. Session at a Glance
 
@@ -61,13 +52,7 @@ By the end of this session you should be able to:
 
 ### 1.3 The Why → What → How arc of this session
 
-```mermaid
-flowchart LR
-    A["WHY<br/>Reproducibility<br/>breaks across machines"] --> B["WHAT<br/>Image / Container / Layer<br/>+ CUDA driver-toolkit split"]
-    B --> C["HOW<br/>Lab 1: verify passthrough<br/>Lab 2: build a GPU image"]
-```
-
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/87711429-0a56-4a3b-b77b-837892020e73" />
 
 ## 2. Why Containers? The Reproducibility Problem in AI
 
