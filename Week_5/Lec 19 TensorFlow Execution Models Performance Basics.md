@@ -1,12 +1,4 @@
 # Week 05 – Segment 1: TensorFlow Execution Models & Performance Basics
-## Detailed Notes
-
-**Course:** NPTEL – Applied Accelerated Artificial Intelligence  
-**Instructor:** Dr. Satyajit Das  
-**Department:** Computer Science and Engineering, Indian Institute of Technology Guwahati  
-**Focus of Segment 1:** What is TensorFlow? | Eager vs Graph Mode | The Computation Graph | Performance Basics | Tensors, Variables, GradientTape
-
----
 
 ## 1. Learning Objectives (Segment 1 focus)
 
@@ -22,8 +14,6 @@
 | 08 | Convert and deploy models across frameworks using ONNX *(Segment 5)* |
 
 This segment lays the foundation for all later performance and interoperability topics.
-
----
 
 ## 2. What is TensorFlow?
 
@@ -64,7 +54,7 @@ High-level APIs give you “plug-and-play” speed. Low-level APIs give you **fl
 
 Most production-grade AI deployments in large organisations still rely heavily on this ecosystem.
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/09272cda-ec86-4892-a4c1-886e8532c60c" />
 
 ## 3. Tensors in Practice (from lecture)
 
@@ -121,8 +111,6 @@ back_to_np = tf_tensor.numpy()             # TensorFlow → NumPy
 
 All of these operations return **new tensors**.
 
----
-
 ## 4. Eager Execution vs Graph Execution
 
 ### 4.1 Side-by-side Comparison
@@ -150,7 +138,7 @@ def my_optimized_function(x, y):
 - **First call** → TensorFlow **traces** the Python function and builds a concrete graph (tracing phase).
 - **Subsequent calls** → The cached graph is executed (no Python interpreter overhead).
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/750f484c-1ba9-4eb0-8872-6fafc41851e9" />
 
 ## 5. The Computation Graph
 
@@ -159,15 +147,7 @@ A **Directed Acyclic Graph (DAG)** where:
 - **Nodes** = operations (`tf.matmul`, `tf.nn.relu`, `tf.add`, …)
 - **Edges** = tensors flowing between operations
 
-```mermaid
-graph TD
-    A[Input Tensor x] --> B[tf.matmul]
-    C[Weight Matrix W] --> B
-    B --> D[tf.nn.relu]
-    D --> E[tf.add]
-    F[Bias b] --> E
-    E --> G[Output Tensor]
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1403564d-bcc2-4b7b-a36c-e61e15382b3b" />
 
 ### 5.2 Advantages of Graph Representation
 
@@ -183,8 +163,6 @@ graph TD
 2. A **ConcreteFunction** is created for that particular input signature (shapes + dtypes).
 3. Later calls with the same signature reuse the cached ConcreteFunction.
 4. Different shapes/dtypes trigger re-tracing (and a new ConcreteFunction).
-
----
 
 ## 6. Automatic Differentiation – `tf.GradientTape`
 
@@ -237,6 +215,8 @@ grads = tape.gradient(z, [x1, x2])
 # grads[0] = ∂z/∂x1 , grads[1] = ∂z/∂x2
 ```
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/bc55f2dc-1d4a-4004-a8c6-d23c69a349ce" />
+
 ### 6.4 Persistent Tape (Multi-loss / Multiple gradient calls)
 
 By default, after the **first** call to `tape.gradient()`, the tape is released (resources freed).  
@@ -253,12 +233,12 @@ dg_dx = tape.gradient(g, x)   # 2x
 del tape   # free resources when finished
 ```
 
+
+
 **Comparison with PyTorch:**
 - PyTorch accumulates gradients by default → you must call `optimizer.zero_grad()`.
 - TensorFlow’s `GradientTape` **forgets** after the first `gradient()` call (unless `persistent=True`).  
   This is closer to an automatic “zero-grad” behaviour.
-
----
 
 ## 7. TensorFlow Performance Basics
 
@@ -326,8 +306,6 @@ def train_step(x, y):
 
 Just adding the decorator is often enough to obtain large speed-ups for repeated training steps.
 
----
-
 ## 9. Summary of Segment 1
 
 | Topic | Key Take-away |
@@ -340,15 +318,5 @@ Just adding the decorator is often enough to obtain large speed-ups for repeated
 | GradientTape | Explicit recording context; `persistent=True` for multi-loss scenarios |
 | Performance | Always profile (TensorBoard) before optimising; watch input pipeline & Python overhead |
 
----
+<img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/1e0df2a7-e6f3-453a-a0e4-8661a98d0fcb" />
 
-## 10. What Comes Next (Preview)
-
-- **Segment 2** – Optimising input pipelines with `tf.data` (prefetch, cache, interleave, map, …)
-- **Segment 3** – Deep dive into graph execution, AutoGraph, and further optimisations
-- **Segment 4** – XLA compilation
-- **Segment 5** – Model interoperability (SavedModel ↔ ONNX)
-
----
-
-*Notes compiled strictly from the Week-5 Segment-1 slides and the accompanying lecture transcript (Dr. Satyajit Das, IIT Guwahati).*
