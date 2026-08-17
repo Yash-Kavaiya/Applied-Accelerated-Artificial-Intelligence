@@ -176,16 +176,16 @@ When you call `tape.gradient(...)`, the recorded operations are differentiated u
 ### 6.2 Scalar Example
 
 Let  
-\[
+```math
 y = x^{2} + 3x + 2
-\]
+```
 
 We want \(\frac{dy}{dx}\) evaluated at \(x = 3\).
 
 **Analytic derivative:**
-\[
+```math
 \frac{dy}{dx} = 2x + 3 \quad \Rightarrow \quad 2\cdot 3 + 3 = 9
-\]
+```
 
 **TensorFlow code:**
 ```python
@@ -200,9 +200,9 @@ dy_dx = tape.gradient(y, x)
 
 ### 6.3 Multivariate Example
 
-\[
+```math
 z = x_1^{2} + x_2^{3} + x_1 x_2
-\]
+```
 
 ```python
 x1 = tf.Variable(2.0)
@@ -278,8 +278,6 @@ Tools mentioned:
 - Maximise GPU / TPU utilisation
 - Minimise idle time
 - Keep the accelerator busy with useful work
-
----
 
 ## 8. Quick Reference – Eager → Graph Transition
 
