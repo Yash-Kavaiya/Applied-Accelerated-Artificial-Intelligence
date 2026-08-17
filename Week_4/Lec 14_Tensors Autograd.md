@@ -1,13 +1,6 @@
 # Detailed Notes: Segment 1 – PyTorch Tensors, Autograd & the Computational Graph
 
-**Course:** NPTEL – Applied Accelerated Artificial Intelligence  
-**Instructor:** Dr. Satyajit Das  
-**Department:** Computer Science and Engineering, IIT Guwahati  
-**Week 04 Theme:** PyTorch for Accelerated Training  
-
 **Segment Focus:** The mathematical building block of every neural network — and how PyTorch tracks every operation to compute gradients automatically.
-
----
 
 ## Course Context – Week 04 Overview
 
@@ -23,8 +16,6 @@ Week 04 focuses on **PyTorch for Accelerated Training**. The goal is to maximise
 
 This segment revisits and deepens the fundamentals of tensors and automatic differentiation — the core machinery that makes training possible.
 
----
-
 ## Learning Objectives — Segment 1
 
 | # | Objective |
@@ -34,8 +25,6 @@ This segment revisits and deepens the fundamentals of tensors and automatic diff
 | 03 | Explain what `requires_grad=True` does and how PyTorch builds a dynamic computational graph during the forward pass |
 | 04 | Call `.backward()` on a scalar loss and read per-parameter gradients from `.grad` attributes |
 | 05 | Distinguish between leaf tensors, non-leaf tensors, and detached tensors; understand when to use `torch.no_grad()` |
-
----
 
 ## 1. PyTorch Tensors: The N-Dimensional Array at the Core of AI
 
@@ -270,8 +259,6 @@ back = t.numpy()               # zero-copy back to NumPy
 - Shared memory: changing one changes the other.
 - Only works for **CPU** tensors. GPU tensors must be moved with `.cpu()` first.
 
----
-
 ## 2. Autograd: Automatic Differentiation – How PyTorch Learns
 
 ### 2.1 The Central Problem
@@ -439,8 +426,6 @@ This computes the **vector-Jacobian product**.
 | `optimizer.zero_grad()` | Must be called every training step; otherwise gradients accumulate across iterations. |
 | Dynamic graph | Rebuilt from scratch on every forward pass → natural Python control flow and variable-length inputs are first-class. |
 
----
-
 ## Practical Recommendations (from the lecture)
 
 1. Always experiment with different shapes, dtypes and devices in a notebook.
@@ -449,9 +434,3 @@ This computes the **vector-Jacobian product**.
 4. For inference, wrap the forward pass in `torch.no_grad()`.
 5. Remember that `.grad` accumulates — call `optimizer.zero_grad()` (or `model.zero_grad()`) at the start of every iteration.
 6. Prefer reducing the loss to a scalar before `.backward()`.
-
----
-
-**Next Segment:** Building Neural Networks with `nn.Module` — organising parameters, layers and the forward computation into clean, reusable, savable model objects.
-
-*End of Segment 1 Detailed Notes*
