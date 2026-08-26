@@ -1257,17 +1257,5 @@ The source transcript is auto-generated, and several technical terms and figures
 
 **Additions beyond the lecture (all flagged inline where they appear):** the pipeline speedup derivation (§4.1), the branch-misprediction cost model (§7.1), the AMAT worked example (§8.4), the peak-FLOPS derivation reconciling 6 vs 12 TFLOPS (§9.2), the ridge-point derivations verifying the plotted 13.0 and 597.0 FLOP/byte labels (§14.3), the arithmetic-intensity derivation for LLM decode (§16.3), and the PCIe offload break-even threshold (§18.2). Each uses **only numbers stated in the lecture or deck** and applies the frameworks the lecture itself teaches.
 
----
+<img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/2eaee569-2b3e-4314-9675-d7083c22e6cf" />
 
-## References (as cited in the deck)
-
-- Patterson & Hennessy, *Computer Organization and Design*, 6th Ed. (2021)
-- Williams, Waterman & Patterson, "Roofline: An Insightful Visual Model," *CACM* (2009)
-- Wulf & McKee, "Hitting the Memory Wall," *ACM SIGARCH* (1995)
-- Hennessy & Patterson, Turing Lecture (2018)
-- NVIDIA Nsight Systems documentation
-- Raschka et al., *Machine Learning with PyTorch and Scikit-Learn* (2022)
-
----
-
-*End of Week 01, Segment 1. Segment 2 continues with the **Memory Hierarchy** — where the data actually lives, and how that placement decides your deployment's performance.*
