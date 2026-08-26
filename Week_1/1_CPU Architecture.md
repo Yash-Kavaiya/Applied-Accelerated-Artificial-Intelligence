@@ -1,12 +1,6 @@
 # Applied Accelerated Artificial Intelligence — Week 01, Segment 1
 ## CPU Architecture and AI Workloads
 
-> **Course:** NPTEL — *Applied Accelerated Artificial Intelligence*
-> **Instructor:** Dr. Satyajit Das, Dept. of Computer Science and Engineering, IIT Guwahati
-> **Week 01:** AI System Hardware & Accelerators
-> **Segment 1 of 5:** *"Understanding how CPUs are structured and why AI demands more than a general-purpose processor"*
-
----
 
 ## Table of Contents
 
@@ -38,15 +32,7 @@
 
 Week 01 covers **AI System Hardware & Accelerators** and is split into five segments. Understanding the map first makes it much easier to see *why* Segment 1 spends so long on something as apparently un-AI as a CPU pipeline.
 
-```mermaid
-flowchart TD
-    W["<b>Week 01</b><br/>AI System Hardware &amp; Accelerators"]
-    W --> S1["<b>Segment 1</b><br/>CPU Architecture<br/><i>← you are here</i>"]
-    W --> S2["<b>Segment 2</b><br/>Memory Hierarchy"]
-    W --> S3["<b>Segment 3</b><br/>GPU &amp; Accelerators"]
-    W --> S4["<b>Segment 4</b><br/>Interconnects"]
-    W --> S5["<b>Segment 5</b><br/>AI Software Stack"]
-```
+
 
 | Segment | Topic | What it answers |
 |---|---|---|
@@ -58,7 +44,6 @@ flowchart TD
 
 **The through-line of the whole week:** we are *accelerating* AI workloads, so we must first agree on the **metrics** that define acceleration. Segment 1 introduces those metrics — FLOPS, memory bandwidth, cache capacity, arithmetic intensity — and they are reused for the rest of the course.
 
----
 
 ## 2. Learning Objectives
 
@@ -104,7 +89,7 @@ Two observations that set up the entire segment:
 
 > **Note on scope (from the lecture):** we deliberately do *not* go into deep microarchitecture detail at this stage. The goal is to understand **where the bottlenecks are**, not to design a CPU.
 
----
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/f3357d1c-6819-49f9-9cd0-09f24f16ec1a" />
 
 ## 4. CPU Microarchitecture I — The Five-Stage Pipeline
 
@@ -204,7 +189,6 @@ That is 12 billion instructions per second **per core** — impressive, and yet 
 
 > **Important intuition to carry forward:** all of this — deep pipeline, superscalar issue, out-of-order scheduling, branch prediction, plus an operating system running on top — is happening *simultaneously* inside a single CPU core. The CPU is an extraordinarily **sophisticated** machine. Its sophistication is spent on making a *single, serial, unpredictable* instruction stream go fast. That is a completely different design goal from an AI workload.
 
----
 
 ## 6. CPU Microarchitecture III — Out-of-Order Execution & the Reorder Buffer
 
@@ -248,7 +232,7 @@ $$\frac{N_{\text{available}}}{N_{\text{required}}} = \frac{250}{800} = 0.3125 = 
 
 **Interpretation:** even in the *best possible* case — 250 perfectly independent instructions, zero hazards — the reorder buffer can only cover about **31%** of a single DRAM miss. The remaining ~69% is dead time. This single calculation is the mechanical reason the memory wall (§15) cannot be engineered away with a bigger OoO window.
 
----
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/316dec78-e53d-47e5-a233-647dc3eb8488" />
 
 ## 7. CPU Microarchitecture IV — Branch Prediction
 
