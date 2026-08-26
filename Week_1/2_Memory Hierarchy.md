@@ -1,11 +1,5 @@
 # Segment 2: Memory Hierarchy, RAM, Storage & Data Movement
 
-**Course:** NPTEL — Applied Accelerated Artificial Intelligence
-**Instructor:** Dr. Satyajit Das, Dept. of CSE, IIT Guwahati
-**Theme:** How data flows from disk to compute units, and why this journey dominates AI system performance
-
----
-
 ## Learning Objectives
 
 1. Map the full data movement path from NVMe storage to GPU compute cores
@@ -14,15 +8,11 @@
 4. Identify bottlenecks in DataLoader pipelines and apply pinned memory optimization
 5. Describe NUMA (Non-Uniform Memory Access) effects in multi-socket AI servers
 
----
-
 ## 1. Big Picture: Why This Topic Matters
 
 - AI system performance isn't just about raw compute (FLOPS) — it's about **how fast data can reach the compute units**.
 - The lecture builds a full mental map: **disk → NVMe → DDR5 → HBM → GPU core**, with the bandwidth and latency at each hop.
 - Core theme repeated throughout: **the gap between compute speed and data movement speed is enormous (~30,000x)**, so modern AI systems must be optimized for data movement, not just compute.
-
----
 
 ## 2. DRAM Fundamentals: DDR, LPDDR, and HBM
 
@@ -41,6 +31,9 @@
   - Per-channel bandwidth: **~38.4 GB/s** (at 4800) up to **~51.2 GB/s** (at 6400)
 - **Multi-channel scaling example:** AMD EPYC 9654 server CPU uses a **12-channel DDR5** configuration → achieves a **peak system bandwidth of ~614 GB/s**.
 
+  <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/2e9dd816-2997-4edd-be35-a9ca828b5c26" />
+
+
 ### 2.3 LPDDR (Low-Power DDR — Mobile/Edge AI)
 - Used in mobile and edge devices where power efficiency matters more than raw peak bandwidth.
 - **LPDDR5X**: ~8533 MT/s, lower voltage — used in NVIDIA Jetson devices and Apple's M-series chips.
@@ -58,6 +51,9 @@
 - HBM **stacks multiple DRAM dies vertically** on a **silicon interposer**, connected via **TSVs (Through-Silicon Vias)** — essentially tiny vertical metal connections linking each stacked die.
 - This 3D stacking next to the GPU die (rather than on a separate DIMM across a bus) is what enables extreme bandwidth.
 - Bandwidth comparison:
+
+  <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/eb4b467b-9bae-4d7b-8c48-a2bcca58147e" />
+
   | Technology | Bandwidth | Capacity | Notes |
   |---|---|---|---|
   | HBM3 (NVIDIA H100, Hopper) | **3.35 TB/s** | 80 GB | ~10x DDR5, ~4x LPDDR5 unified memory |
@@ -67,7 +63,7 @@
 - Why it matters: HBM is now **essential for AI training and inference**, since LLMs and deep learning models are extremely bandwidth-hungry.
 - Important distinction: HBM's advantage is in **bandwidth**, not necessarily capacity — it answers "how fast can I move data," not "how much data can I store."
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/72a0491a-85c0-49de-a3c2-93b2a98da3f2" />
 
 ## 3. Storage Tiers & the Data Ingestion Pipeline
 
@@ -94,6 +90,9 @@
 - `num_workers`: controls how many parallel worker processes prefetch data in the background.
   - **Rule of thumb: `num_workers` = 2 to 4× the number of GPUs.**
 - `pin_memory=True`: pins host memory so it can be transferred to the GPU faster over CUDA (avoids extra copy through pageable memory). This is a system-level concept; exact coding details are covered in later lectures.
+
+
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/75f927ba-4d8f-4e9b-b581-5a17e7dddb33" />
 
 ### 3.4 Network / Distributed Storage for Large-Scale AI
 - Once you scale beyond a single machine, you move from a "unified file system" to **distributed storage**:
@@ -141,7 +140,8 @@
 
 **Rough overall hierarchy (slowest → fastest):** HDD → SATA SSD → NVMe SSD → NVMe RAID → DDR5 (1 channel) → DDR5 (multi-channel/socket) → cross-socket link → NVLink (GPU-GPU) → HBM (on-chip GPU memory).
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/a0e76802-f6d4-427f-8f4e-8ea3dee61277" />
+
 
 ## 5. Data Movement Costs: The Hidden Performance Tax
 
@@ -177,7 +177,7 @@
 > "The free lunch is over for compute. The next frontier is memory-efficient algorithms."
 — an idea adapted (originally from Herb Sutter's 2005 "free lunch" argument about the end of easy CPU clock-speed scaling) and applied here to modern AI systems: further gains will increasingly come from **smarter memory/data-movement strategies**, not just faster chips.
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/015c57dc-2ecd-4d6f-bdc7-a9ce5d26742d" />
 
 ## 6. Segment Summary (Key Takeaways)
 
@@ -187,34 +187,5 @@
 4. **DataLoader optimization** (pinned memory, correct `num_workers`, prefetching) is essential to prevent **GPU starvation** (GPU sitting idle waiting for data).
 5. **Data movement's energy/time cost dwarfs the arithmetic cost** — techniques like **operator fusion, tiling, and mixed precision** are first-order optimizations that matter more than raw compute upgrades.
 
----
+<img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/0c1963c4-3b8a-481c-9597-2c9cfcecc58a" />
 
-## Quick-Reference Numbers Cheat Sheet
-
-| Metric | Value |
-|---|---|
-| DRAM refresh interval | ~64 ms |
-| DDR5 per-channel bandwidth | 38.4–51.2 GB/s |
-| 12-channel EPYC DDR5 (system) | ~614 GB/s (also cited as ~460 GB/s/socket in NUMA slide) |
-| LPDDR5X (Apple M2 Ultra) | ~800 GB/s unified |
-| ECC overhead | 2–4% |
-| HBM3 (H100) | 3.35 TB/s, 80 GB |
-| HBM3e (H200) | 4.8 TB/s, 141 GB |
-| AMD MI300X (HBM3) | 5.3 TB/s |
-| GDDR6X (RTX 4090) | 1.008 TB/s |
-| HDD | ~150 MB/s |
-| SATA SSD | ~550 MB/s |
-| NVMe SSD (PCIe 4.0) | ~7 GB/s |
-| NVMe RAID-0 (8 drives) | ~56 GB/s |
-| NVLink 4 (GPU–GPU) | 900 GB/s bidirectional |
-| PCIe (CPU–GPU) | ~128 GB/s bidirectional |
-| Cross-socket (Infinity Fabric/UPI) | ~400 GB/s |
-| PCIe data movement energy cost | ~700 pJ/byte |
-| On-chip FP32 MAC energy cost | ~1 pJ |
-| H100 peak compute (FP8) | 3.958 PFLOPS |
-| Compute-to-bandwidth gap (H100) | ~30,000x |
-| Flash Attention v2 speedup | 3–5x (via reduced HBM access) |
-| Mixed precision speedup | 1.5–2x |
-| `num_workers` rule of thumb | 2–4x number of GPUs |
-
-*(Note: a couple of figures are stated slightly differently between the spoken lecture and the slides — e.g., 12-channel EPYC DDR5 bandwidth is quoted as both ~614 GB/s and ~460 GB/s/socket depending on the slide. Both are included above for reference.)*
