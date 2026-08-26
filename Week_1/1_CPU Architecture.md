@@ -271,7 +271,7 @@ Small — *because the predictor is good*. Drop accuracy to $p = 0.80$ and the s
 
 All four together buy the CPU roughly **4–6 TFLOPS** of FP32 peak on a top-end server part (§9). Hold that number.
 
----
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/564fa487-516c-4e50-a59c-dfd7ccafc8a7" />
 
 ## 8. The Cache Hierarchy
 
@@ -296,18 +296,8 @@ The lecture uses an Intel Xeon as the worked example.
 
 Two axes move in opposite directions as you descend:
 
-```
-   FAST, SMALL, EXPENSIVE                              SLOW, HUGE, CHEAP
-   ◄──────────────────────────────────────────────────────────────────►
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/95b9c5f4-b415-4928-8879-5981fec0aa05" />
 
-   Registers   L1        L2         L3          DRAM          NVMe SSD
-   <1 KB     32-64 KB  256-512 KB  30-60 MB      GBs            TBs
-   <1 ns     1-4 ns     4-12 ns    15-40 ns   ~60-200 ns    50-200 µs
-     │         │           │           │            │              │
-     └─────────┴───────────┴───────────┴────────────┴──────────────┘
-        Increasing LATENCY ────────────────────────────────────►
-        Increasing CAPACITY ───────────────────────────────────►
-```
 
 ### 8.3 Converting cycles to nanoseconds
 
@@ -454,7 +444,7 @@ These two sentences are the entire thesis of Segment 1. A CPU is a machine built
 | Peak FP32 | ~4–6 TFLOPS | ~1000 TFLOPS |
 | Memory BW | ~300 GB/s (DDR5) | ~3350 GB/s (HBM3) |
 
----
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/95a83fa1-c633-486f-b1a0-149677d28f43" />
 
 ## 10. Instruction-Level Parallelism (ILP) and Its Ceiling
 
@@ -692,7 +682,8 @@ $$P = \min\big(2\times10^{15},\ 3.35\times10^{12}\times 4\big) = 13.4\ \text{TFL
 
 Still catastrophic. **This is why operator fusion exists** — fusing LayerNorm into an adjacent GEMM raises the *fused kernel's* $I$ by eliminating the intermediate round-trip to DRAM.
 
----
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/db9fc796-7d71-4d33-9a62-b05be4543d9f" />
+
 
 ## 14. The Roofline Model
 
