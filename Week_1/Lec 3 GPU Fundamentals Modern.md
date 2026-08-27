@@ -99,6 +99,9 @@ A **Tensor Core** is a specialized fixed-function unit that performs:
 
 > **Important limitation:** Tensor Cores are only effective for **large matrix shapes**. Small GEMM sizes **underutilize** them.
 
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/1e2041e3-96af-42de-8404-b294017de199" />
+
+
 ### Supported Precisions and Use Cases (H100)
 
 | Precision | Peak Performance | Use Case |
@@ -138,7 +141,6 @@ A **Tensor Core** is a specialized fixed-function unit that performs:
 - **Training:** typically uses FP32 (master) + FP16/BF16/TF32 (compute) via AMP; FP8 is emerging for LLM training.
 - **Inference:** typically uses **INT8 or INT4** (quantized inference) for maximum throughput and lower memory footprint.
 
----
 
 ## 7. Beyond NVIDIA: The AI Accelerator Landscape
 
@@ -169,6 +171,9 @@ Not all AI compute runs on NVIDIA GPUs. Key alternative players:
 - **Trainium2:** ~190.7 TFLOPS (FP16) — optimized for AWS SageMaker training jobs
 - **Inferentia2:** ~190 TOPS (INT8) — purpose-built for low-latency inference serving
 - Both come with a ready-to-use software stack on AWS Cloud
+
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/466d0ac5-9b92-419e-bf1e-1153fa80dc64" />
+
 
 ### Quick Comparison Table
 
@@ -220,7 +225,8 @@ A family of techniques to shard/partition memory-heavy components across multipl
 - `nvidia-smi --query-gpu=memory.used,memory.free --format=csv` — quick GPU memory usage check
 - `torch.cuda.memory_summary()` — detailed per-tensor memory breakdown in PyTorch
 
----
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/2be95e85-016e-4000-8552-5ce293924555" />
+
 
 ## 9. Segment Summary (Key Takeaways)
 
@@ -251,14 +257,5 @@ A family of techniques to shard/partition memory-heavy components across multipl
 | **Systolic array** | Data flows through a fixed mesh of MAC units without control overhead (used in TPUs) |
 | **BSP** | Bulk Synchronous Parallel — Graphcore IPU's compute/communicate execution model |
 
----
+<img width="2752" height="1536" alt="image" src="https://github.com/user-attachments/assets/885354fd-94d7-48a6-9db9-b2af0a4581cd" />
 
-## 11. References (as cited in lecture slides)
-
-- NVIDIA H100 GPU Architecture Whitepaper (2022)
-- Kirk & Hwu, *"Programming Massively Parallel Processors,"* 4th Ed.
-- NVIDIA Hopper Architecture In-Depth (2022)
-- Micikevicius et al., *"Mixed Precision Training,"* ICLR 2018
-- AMD MI300X Architecture Whitepaper (2023)
-- Google TPU v4, Jouppi et al., ISCA 2023
-- Rajbhandari et al., *"ZeRO: Memory Optimizations Toward Training Trillion Parameter Models,"* SC'20
