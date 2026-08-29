@@ -1,4 +1,3 @@
-Let me pull together a full walkthrough of this segment, with a couple of diagrams to make the harder parts (the ring algorithm, the interconnect hierarchy) easier to follow.This is a dense but well-organized segment. Here's the full walkthrough.
 
 ## The core problem: why interconnects matter at all
 
@@ -16,6 +15,7 @@ PCIe (PCI Express) is a point-to-point serial link found in essentially every co
 In an AI server, the CPU's root complex connects downstream to PCIe switches, and multiple GPUs share that switch's uplink bandwidth — which creates contention as you add more GPUs. PCIe is what you use for CPU↔GPU transfers, and it can also do peer-to-peer GPU↔GPU transfers if the GPUs sit behind the same switch. But is it *enough* for GPU-to-GPU traffic at training scale? That's where the numbers get interesting.
 
 **The bandwidth gap.** An H100's HBM3 memory delivers roughly 3,350 GB/s — about 52x faster than PCIe 5.0's 64 GB/s. That mismatch matters a lot once you start doing distributed training.
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/766a4b73-a491-4c08-a290-e512b18729ea" />
 
 ## Why NVLink was invented: the AllReduce bottleneck
 
@@ -36,6 +36,7 @@ At PCIe 5.0's 64 GB/s, that's about **380 ms** just to synchronize gradients —
 So the division of labor becomes: **PCIe handles CPU↔GPU**, **NVLink replaces PCIe for GPU↔GPU**.## NVSwitch: solving the multi-hop bottleneck
 
 NVLink solves point-to-point GPU pairs, but it creates a new problem once you have more than two GPUs. If GPU 0 and GPU 1 are directly linked, and GPU 1 and GPU 2 are directly linked, but GPU 0 and GPU 2 are *not*, then GPU 0 talking to GPU 2 has to "hop" through GPU 1 — and every hop degrades effective bandwidth. With 8 GPUs, point-to-point NVLink connections alone would create serious bottlenecks for some GPU pairs.
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/3a3c65e4-5900-4306-a301-d6ef434a7901" />
 
 **NVSwitch** solves this by acting as an all-to-all crossbar switch. In a DGX H100, 8 GPUs connect through 4 NVSwitches (4th generation, each with 57.6 TB/s of total switching bandwidth and 256 NVLink ports) in an all-to-all fat-tree arrangement. The result: **any GPU can talk to any other GPU at the full 900 GB/s, with no bandwidth penalty regardless of which pair you pick.** This is what makes 8-GPU nodes practical for large-scale training — no GPU is ever "far" from any other GPU. NVLink Network extends this same fabric across multiple physical nodes using external NVLink switches.
 
@@ -45,6 +46,7 @@ Before getting into the communication algorithms, it's worth being clear on *why
 
 - **Model parallel**: the model itself is chunked — e.g., layers 1–16 on GPU 0, layers 17–32 on GPU 1, and so on. Every GPU sees *all* the data, but only computes a slice of the network. Results get aggregated across the layer boundaries.
 - **Data parallel**: every GPU holds a *complete copy* of the model, but each one trains on a different mini-batch of data. Since each copy sees different data, each computes different gradients after the backward pass — and those gradients must be synchronized (averaged) before the next update, which is exactly the AllReduce operation discussed above.
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/82a2eff7-2c1f-4dba-801c-ea76591fd67c" />
 
 ## Collective communication primitives
 
@@ -56,6 +58,7 @@ Distributed training relies on a small set of standard "collective" operations, 
 - **Broadcast**: one GPU sends data to everyone else (e.g., for model initialization or checkpoint loading).
 
 **Ring AllReduce**, the most widely used algorithm for gradient synchronization, works in two phases:
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/5060982a-d138-494b-9425-73a50f608010" />
 
 1. **ReduceScatter** (N−1 steps): the gradient tensor is split into N chunks. Each GPU passes its chunk to its ring neighbor, who adds it to the same chunk it's accumulating. After N−1 steps, each GPU holds one *fully reduced* chunk (its 1/N piece of the final answer).
 2. **AllGather** (N−1 steps): those fully-reduced chunks are then passed around the ring again so that every GPU ends up with all N chunks — i.e., the complete, fully-reduced gradient.
@@ -69,6 +72,7 @@ These are the software libraries that actually implement the collectives above o
 - **NCCL** (NVIDIA): GPU-native, uses NVLink and RDMA directly, gives the best performance — but only on NVIDIA hardware.
 - **MPI** (via OpenMPI): CPU-based, the traditional HPC standard, works across heterogeneous clusters.
 - **Gloo**: a CPU fallback used inside PyTorch's DistributedDataParallel (DDP), mainly for CPU-only or debugging setups.
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/f1ca0288-82b2-402a-8662-3394cfba273b" />
 
 ## Network topologies for multi-node clusters
 
@@ -79,6 +83,7 @@ Once you go beyond a single 8-GPU node, the *topology* connecting nodes matters 
 - **Torus networks** (Google TPU pods, the Frontier supercomputer): nodes arranged in a multi-dimensional grid with wrap-around edges. A TPU v4 pod uses a 3D torus across 4,096 chips — excellent for collective operations. AMD's Frontier system uses a 3D torus with a Slingshot-11 network.
 
 Practical rule of thumb from the slides: single-node 8-GPU setups are well served by NVSwitch alone; multi-node clusters under ~64 GPUs typically use 200 Gb/s InfiniBand or RoCEv2 with RDMA; HPC-scale clusters (1000+ GPUs) lean on InfiniBand HDR/NDR or proprietary fabrics like NVLink Network.
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/ce81ec50-5f2e-444e-a617-2ec8cf3d5ef0" />
 
 ## Tying it together
 
