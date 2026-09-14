@@ -2,8 +2,6 @@
 
 *Why inference differs from training, where latency comes from, and how hardware is matched to AI serving workloads*
 
----
-
 ## Learning Objectives
 
 1. Distinguish the inference compute pattern from training: batch size 1 vs large, memory-bandwidth-bound vs compute-bound.
@@ -11,8 +9,6 @@
 3. Identify the five main sources of inference latency: model loading, tokenisation, prefill, decode, and post-processing.
 4. Explain why the KV cache is the dominant memory consumer during LLM decode, and calculate its size.
 5. Match inference workload characteristics to GPU/CPU/NPU hardware capabilities, and explain why H100 NVL is preferred for LLM serving.
-
----
 
 ## 1. Scope of This Segment
 
@@ -25,8 +21,6 @@ This week (Week 9) is dedicated to **inference** for large language models and t
 Two central themes for this segment:
 - **Where does inference latency come from?** (unlike training, we don't care about loss computation, backward pass, gradient updates, or optimizer memory during inference)
 - **Hardware and metrics**: what metrics define good serving performance, and the latency/throughput tradeoff in production.
-
----
 
 ## 2. Training vs Inference: Two Fundamentally Different Compute Patterns
 
@@ -65,7 +59,7 @@ Because online serving uses batch size 1, you **cannot** extract the same parall
 
 *Reference cited on slides: Pope et al., "Efficiently Scaling Transformer Inference," MLSys 2023.*
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/90815530-5fde-4f66-b86d-e487fb5e5477" />
 
 ## 3. Key Inference Performance Metrics
 
