@@ -108,7 +108,8 @@ When a new token (say, token *E*) is generated during decode:
 
 This is one of the biggest structural differences from training: during training, there's no need to maintain a KV cache, because the backward pass recomputes/uses activation gradients, not a persistent decode-time cache.
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/a0a70f53-bb76-4675-ba0e-701badebd1ed" />
+
 
 ## 5. The Memory Bandwidth Bottleneck in Decode
 
@@ -140,7 +141,7 @@ At batch size 1, a single decode step:
 
 **Bottom line:** for batch=1 decode, you must load *all* the weights just to generate a single token — this is why decode is fundamentally different (and harder to make efficient) than training or prefill.
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/77a5883a-508b-4707-94f2-db2c85a083e7" />
 
 ## 6. KV Cache Sizing
 
@@ -169,7 +170,8 @@ The factor of 2 accounts for storing **both** keys and values.
 
 *Reference cited on slides: Pope et al., "Efficiently Scaling Transformer Inference," MLSys 2023.*
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/7b0f4602-6e7e-4619-8663-c84fbfff691e" />
+
 
 ## 7. Inference Hardware: Matching Workload to Accelerator
 
@@ -201,7 +203,8 @@ The factor of 2 accounts for storing **both** keys and values.
 
 These specialized accelerators are widely used in the servers hosting large deployed models (e.g., Gemini, Grok, and other customized LLMs).
 
-*Reference cited on slides: Kwon et al., "Efficient Memory Management for LLM Serving with PagedAttention," SOSP 2023.*
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/814f1154-9329-4de0-b86e-fbda5246a8a7" />
+
 
 ### 7.4 CPU Inference: When and Why
 
@@ -234,8 +237,8 @@ These four techniques are the primary levers modern serving stacks use to close 
 - **PagedAttention**: eliminates KV cache fragmentation — enables **3–4× more concurrent requests**.
 - **Speculative decoding**: up to **3× TTFT/TPOT improvement** at the same hardware cost.
 - **Quantization**: 4-bit quantization enables **4× more concurrent requests** in the same VRAM footprint.
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/4d59a33e-b7d5-447e-8794-222ee3fcc39d" />
 
----
 
 ## 8. PagedAttention and Continuous Batching: The Foundation of Modern LLM Serving
 
@@ -281,7 +284,7 @@ outputs = llm.generate(['What is ML?'], SamplingParams(max_tokens=200))
 
 *Note: vLLM, TensorRT-LLM, and SGLang all implement PagedAttention + continuous batching as their baseline.*
 
----
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/b68645e4-b721-49ce-abce-08e2ddd0b729" />
 
 ## 9. Inference Serving Frameworks: vLLM, TGI, and SGLang
 
@@ -378,6 +381,6 @@ H100 NVL (188 GB combined) is the preferred serving GPU for 70B-class models bec
 **Software stack:**
 vLLM is the dominant open-source serving framework overall. SGLang leads specifically for prefix-heavy workloads (RAG, agents) via RadixAttention. TGI is preferred for HuggingFace-ecosystem production deployments. TensorRT-LLM maximizes raw throughput on NVIDIA hardware at the cost of a required compilation step.
 
----
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/62e8e7c5-f399-4649-9abe-efab09f4495d" />
 
 *Sources referenced across slides: Pope et al., "Efficiently Scaling Transformer Inference" (MLSys 2023); Kwon et al., "Efficient Memory Management for LLM Serving with PagedAttention" (SOSP 2023); Yu et al., "Orca" (OSDI 2022); Zheng et al., "SGLang: Efficient Execution of Structured Language Model Programs" (NeurIPS 2024).*
