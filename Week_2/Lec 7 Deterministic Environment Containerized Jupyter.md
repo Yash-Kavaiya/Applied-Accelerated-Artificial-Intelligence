@@ -1,10 +1,5 @@
 # Week 2 · Session 2 — Deterministic Environments & Containerized Jupyter
 
-**Course:** Containerized AI Systems (Week 2, Session 2 of 4)
-**Instructor:** Dr. Satyadhyan Chickerur — Director, Centre for AI Research; Professor, School of CSE, KLE Technological University, Hubballi, Karnataka
-
----
-
 ## 1. Learning Objectives
 
 By the end of this session you should be able to:
@@ -46,7 +41,7 @@ torch==2.11.2
 
 > **Core idea:** Solve drift by **pinning**, then **locking**.
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8094790a-548b-43fe-a34a-3f316547c4dc" />
 
 ## 3. Three Levels of Strictness — The Pinning Ladder
 
@@ -60,7 +55,8 @@ torch==2.11.2
 - **Exact pins** fix the version number, but rely on the package index/wheel still being published as-is.
 - **Hash-locked** installs verify the exact bytes of every package — if anyone tampers with a package, the install fails. This is the strictest, most reproducible tier.
 
----
+
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c892c6c3-77d4-4f38-a4cf-9071deeb8b1d" />
 
 ## 4. Lab 1 — Lockfile Workflow with `pip-compile`
 
@@ -94,7 +90,7 @@ RUN pip install --no-cache-dir --require-hashes -r requirements.txt
 
 Everyone who runs `pip-compile --generate-hashes` against the same `requirements.in` gets an identical `requirements.txt` — same packages, same hashes, **byte-equivalent** installs. No person-to-person variation.
 
----
+<img width="2170" height="725" alt="image" src="https://github.com/user-attachments/assets/fd0810a3-1665-4f75-9377-9b5e41bb513b" />
 
 ## 5. The Compatibility Chain — Driver → CUDA → Framework → Python
 
@@ -116,7 +112,8 @@ Host driver >= CUDA toolkit in image == CUDA of framework wheel
 
 > **Important:** Document the **driver floor** in your README. It's the one thing the container image *cannot* carry — the host driver lives outside the container and must be verified separately (e.g., via `nvidia-smi`).
 
----
+<img width="1942" height="809" alt="image" src="https://github.com/user-attachments/assets/9b9f86ba-f1b9-4925-acfa-e39989bb0952" />
+
 
 ## 6. Image Diet — Multi-Stage Builds
 
@@ -137,7 +134,7 @@ RUN pip install --no-index --find-links=/wheels -r requirements.txt
 - The `runtime` image shrinks by **gigabytes**.
 - Smaller image → faster node pull → faster autoscaling → faster job starts.
 
----
+<img width="1774" height="887" alt="image" src="https://github.com/user-attachments/assets/9dfd9944-3f53-486c-89a8-0acd9bf69ef2" />
 
 ## 7. Dev Workflow — What Actually Needs Wiring for Containerized Jupyter
 
@@ -209,7 +206,8 @@ docker compose up
 docker compose down
 ```
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/165118ec-4108-4f4b-91a8-1b59ef4034aa" />
+
 
 ## 9. Dev Loops — Where Should the Code Live?
 
@@ -264,7 +262,6 @@ RUN --mount=type=secret,id=hf_token ...
 - Jupyter needs **three wires**: port, volume, shared memory.
 - **Next session (Session 3):** A CUDA primer inside containers, and CI that validates every image build.
 
----
 
 ## Appendix — Reference Files from the Demo
 
