@@ -4,7 +4,6 @@
 > **Session focus:** The two Python-native frameworks that implement the distributed-data theory from Session 1, and when to use each.
 > **Coming up:** Session 3 (skew handling, Spark comparison) and Session 4 (wrap-up).
 
----
 
 ## Table of Contents
 
@@ -24,8 +23,6 @@
 8. [Quick Revision Cheat Sheet](#8-quick-revision-cheat-sheet)
 9. [Likely Exam / Interview Questions](#9-likely-exam--interview-questions)
 
----
-
 ## 1. The Big Picture
 
 Session 1 covered the **theory** of distributed data engineering. This session covers the **two Python-native tools that actually implement it**, and when to reach for each one.
@@ -40,23 +37,13 @@ These are **frameworks, not just libraries**, and they do **different jobs**:
 | **Focus** | Distributing *data processing* | Distributing *ML/AI workloads* across CPUs and GPUs |
 | **Analogy** | A pandas notebook that learned to delegate: *same recipes, more kitchens* | A general contractor: hire workers (tasks) for any job, or keep a specialist (actor) on staff who remembers things between jobs, like a loaded model on a GPU |
 
-```mermaid
-flowchart TD
-    A["Distributed Data Engineering<br/>(Week 10)"] --> B["Session 1<br/>Theory: what does<br/>distributed data mean?"]
-    A --> C["Session 2<br/>Dask and Ray<br/>(Python-native tools)"]
-    A --> D["Session 3<br/>Further topics<br/>(e.g. skew handling)"]
-    A --> E["Session 4<br/>Wrap-up"]
-    C --> F["Dask<br/>Scale DataFrame code<br/>Tabular ETL"]
-    C --> G["Ray<br/>Scale arbitrary Python<br/>ML / GPU workloads"]
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/11b8a06c-5940-44f2-aefc-ae9f2da19ae3" />
 
 ### Key intuition
 
 - **Dask** = *same instructions, different slices of data, executed on different workers.*
 - **Ray** = *distribute a Python program (and ML/AI workloads) across workers, deciding how CPUs and GPUs are used, e.g. how to load a model onto a GPU.*
 - Normal Python is **sequential**. Ray is a framework that **distributes Python programming among various workers**, so it is essentially *distributed Python*.
-
----
 
 ## 2. Key Terms (Vocabulary)
 
@@ -72,20 +59,7 @@ flowchart TD
 
 > **Naming note from the lecture:** "process", "worker", "actor" and "task" are used a bit differently across the two tools, but the underlying idea is the same: a unit of work assigned to a machine.
 
-```mermaid
-flowchart LR
-    subgraph Dask
-        DS["Scheduler"] --> DW1["Worker 1<br/>partition 1"]
-        DS --> DW2["Worker 2<br/>partition 2"]
-        DS --> DW3["Worker 3<br/>partition 3"]
-    end
-    subgraph Ray
-        RT["Task<br/>stateless<br/>runs anywhere"]
-        RA["Actor<br/>stateful<br/>lives on one worker"]
-    end
-```
-
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/6009cea5-963d-46a7-933d-a818288a6eda" />
 
 ## 3. Dask
 
@@ -99,19 +73,8 @@ Dask can take data from **CSV files, Excel files, and other data structures**, a
 | **Array** | A **chunked NumPy ndarray** | NumPy | `arr.mean`, `arr + arr` | **Scientific computing** |
 | **Bag** | A **parallel iterable over Python objects** | Python lists / iterators | `map`, `filter`, `reduce` | **Raw JSON / text** |
 
-```mermaid
-flowchart TD
-    D["Dask"] --> DF["DataFrame<br/>pandas split by row"]
-    D --> AR["Array<br/>chunked numpy ndarray"]
-    D --> BG["Bag<br/>parallel iterable of Python objects"]
-    DF --> DF1["Tabular ETL"]
-    AR --> AR1["Scientific computing"]
-    BG --> BG1["Raw JSON / text"]
-```
-
 > **KEY IDEA:** Dask's pitch is to **scale your EXISTING pandas/NumPy code with minimal changes**. Swap `import pandas as pd` for `import dask.dataframe as dd`.
 
----
 
 ### 3.2 Dask DataFrame: It Looks Like pandas
 
@@ -149,24 +112,10 @@ out = hourly.compute()       # trigger execution, pull result to driver
 - The API looks like pandas but is shifted to a **lazy-evaluation approach for distributed computing**.
 - Laziness lets Dask see the **whole plan** before running it, so it can read only what's needed and **minimise shuffle and recomputation**.
 
----
 
 ### 3.3 Lazy Evaluation, `persist()` and `compute()`
 
-```mermaid
-sequenceDiagram
-    participant U as Your script (driver)
-    participant S as Scheduler
-    participant W as Workers
-    U->>U: dd.read_parquet(...)  (build plan, no data read)
-    U->>U: filter / add column / groupby  (extend plan)
-    U->>S: hourly.persist()
-    S->>W: Run the plan, keep result in worker memory
-    W-->>S: Result cached (distributed in memory)
-    U->>S: hourly.compute()
-    S->>W: Fetch / finish remaining work
-    W-->>U: Final result pulled to driver
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/080ca348-8618-4d49-a298-a6cabda4a0d5" />
 
 | Operation | Behaviour | Where result lives | Use when |
 |---|---|---|---|
@@ -175,8 +124,6 @@ sequenceDiagram
 | **`compute()`** | Executes and **returns result to the driver** | Local memory as a regular pandas object | You need the **final, small** result locally |
 
 > **Warning:** Only call `compute()` on results small enough to fit on one machine. It pulls everything to the driver.
-
----
 
 ### 3.4 Dask Deployment Models
 
@@ -204,8 +151,6 @@ flowchart LR
 flowchart LR
     A["Develop<br/>LocalCluster"] --> B["Productionise<br/>Kubernetes<br/>autoscaling pods"] --> C["Serve to others<br/>Cloud-managed<br/>Coiled / Saturn"]
 ```
-
----
 
 ## 4. Ray
 
@@ -250,22 +195,7 @@ class InferenceWorker:
 - The **actor** loads the model **once** in `__init__` (`load_model().cuda()`) and then keeps it **resident on the GPU**, so every later `score()` call is fast.
 - With a **task**, there is no memory between calls, so if the model has to be loaded inside it, it gets **reloaded on every call**. That is the classic mistake (see Section 7).
 
-```mermaid
-flowchart TD
-    subgraph T["Ray TASK: stateless"]
-        T1["Call 1"] --> TW1["Any worker<br/>(load model + score)"]
-        T2["Call 2"] --> TW2["Another worker<br/>(load model + score)"]
-        T3["Call 3"] --> TW3["Any worker<br/>(load model + score)"]
-    end
-    subgraph A["Ray ACTOR: stateful"]
-        A0["Init once:<br/>load_model().cuda()"] --> AW["One worker (GPU)<br/>model stays resident"]
-        A1["Call 1"] --> AW
-        A2["Call 2"] --> AW
-        A3["Call 3"] --> AW
-    end
-```
-
----
+<img width="1312" height="1199" alt="image" src="https://github.com/user-attachments/assets/d44a071b-b1ca-4976-b1e8-df0421f83e79" />
 
 ### 4.2 The Ray Ecosystem Libraries
 
@@ -276,17 +206,7 @@ flowchart TD
 | **Ray Tune** | **Hyperparameter search at (production) scale** |
 | **Ray Serve** | **Model serving with autoscaling**, A/B testing |
 
-```mermaid
-flowchart TD
-    R["Ray Core<br/>tasks + actors"] --> RD["Ray Data<br/>streaming GPU-aware data"]
-    R --> RT["Ray Train<br/>DDP / FSDP training"]
-    R --> RU["Ray Tune<br/>hyperparameter search"]
-    R --> RS["Ray Serve<br/>serving + autoscaling + A/B"]
-    RD --> P["Typical ML lifecycle"]
-    RT --> P
-    RU --> P
-    RS --> P
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/540d5d1e-870f-4a9d-8cf7-b472bcf27715" />
 
 ```mermaid
 flowchart LR
@@ -294,8 +214,6 @@ flowchart LR
 ```
 
 > Because these libraries are **tightly integrated**, Ray is the natural choice for a **unified ML stack** (train + tune + serve).
-
----
 
 ## 5. Dask vs Ray: When to Pick Which
 
@@ -311,32 +229,6 @@ flowchart LR
 ### Common in practice: use both
 
 > **Dask for ETL → persist to Parquet → Ray for GPU inference.**
-
-```mermaid
-flowchart LR
-    RAW["Raw data<br/>(S3 logs, CSV, ...)"] --> DASK["Dask<br/>tabular ETL"]
-    DASK --> PQ[("Parquet<br/>persisted")]
-    PQ --> RAYD["Ray Data<br/>GPU actors + streaming"]
-    RAYD --> OUT["Predictions /<br/>embeddings"]
-```
-
-### Decision flowchart
-
-```mermaid
-flowchart TD
-    Q["What is my workload?"] --> A{"Tabular data<br/>with existing<br/>pandas / NumPy code?"}
-    A -->|Yes| DASK["Use Dask"]
-    A -->|No| B{"ML / AI workload<br/>needing GPUs?"}
-    B -->|No| CORE["Use Ray Core<br/>(general distributed Python)"]
-    B -->|Yes| C{"What stage?"}
-    C -->|"Batch inference /<br/>streaming data"| RD["Ray Data"]
-    C -->|"Distributed training"| RT["Ray Train"]
-    C -->|"Hyperparameter search"| RU["Ray Tune"]
-    C -->|"Serving with autoscaling"| RS["Ray Serve"]
-    C -->|"Whole pipeline"| RALL["Ray<br/>(train + tune + serve)"]
-```
-
----
 
 ## 6. Moving from pandas to Dask: What Doesn't Translate
 
@@ -362,20 +254,8 @@ def process(pdf):          # pdf is a regular pandas DataFrame (one partition)
 ddf = ddf.map_partitions(process)
 ```
 
-```mermaid
-flowchart TD
-    S["Porting pandas code to Dask"] --> Q1{"Uses iterrows?"}
-    Q1 -->|Yes| F1["Replace with map_partitions"]
-    Q1 -->|No| Q2{"Global sort_values?"}
-    Q2 -->|Yes| F2["Avoid: needs a full shuffle"]
-    Q2 -->|No| Q3{"len or shape<br/>in the hot path?"}
-    Q3 -->|Yes| F3["Avoid: forces full pass"]
-    Q3 -->|No| Q4{"Styler or exotic<br/>datetime ops?"}
-    Q4 -->|Yes| F4["Check Dask docs for support"]
-    Q4 -->|No| OK["Just swap pd to dd"]
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/cc06bb3f-6527-45f4-a7a1-6a55bcf9893e" />
 
----
 
 ## 7. Common Mistakes and How to Spot Them
 
@@ -417,7 +297,8 @@ flowchart LR
 | Deployment | Local / Kubernetes / Coiled, Saturn | (Ray cluster, e.g. on Kubernetes or cloud; not detailed in this session) |
 | Traps | `iterrows`, global sort, `len`/`shape`, skew | Using tasks for loaded models |
 
----
+<img width="1224" height="1285" alt="image" src="https://github.com/user-attachments/assets/ee059a33-ea5d-465d-9851-139f35f031b6" />
+
 
 ## 9. Likely Exam / Interview Questions
 
@@ -448,6 +329,4 @@ flowchart LR
 9. **What symptom indicates key skew in Dask?**
    *One partition much larger than the rest; handle it as you would in Spark (Session 3).*
 
----
 
-*Notes compiled from the Session 2 slides and lecture transcript. The extra code comments, diagrams and exam questions are added for revision purposes.*
