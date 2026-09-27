@@ -2,26 +2,13 @@
 
 *How to measure the complete application, not only the model.*
 
----
-
 ## 1. The Classroom Demonstration Workflow
 
 The full pipeline runs through eight stages, from raw video to an optional LLM summary:
 
-```mermaid
-flowchart LR
-    A["1. Prepare<br/>video"] --> B["2. Inspect<br/>first frame"]
-    B --> C["3. Configure<br/>ROI + line"]
-    C --> D["4. Run detection<br/>+ tracking"]
-    D --> E["5. Inspect<br/>annotated video"]
-    E --> F["6. Inspect<br/>events.jsonl"]
-    F --> G["7. Generate<br/>incident report"]
-    G --> H["8. Optional<br/>LLM summary"]
-```
+<img width="1774" height="887" alt="image" src="https://github.com/user-attachments/assets/a87cc185-e376-49a5-bc24-8f1c239083af" />
 
 > **Demo goal:** convert video into auditable structured events. The LLM step (8) is optional — the demonstration is complete without it.
-
----
 
 ## 2. The Core Principle
 
@@ -29,7 +16,8 @@ flowchart LR
 
 Performance must be measured **end-to-end** — across the whole application — not just for the neural network. The input stream's real-world usability depends on total throughput, not detector speed alone.
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a446c5fe-8511-45f2-9394-bc82716930c6" />
+
 
 ## 3. End-to-End Performance Measurement
 
