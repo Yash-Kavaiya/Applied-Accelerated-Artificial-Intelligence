@@ -26,8 +26,6 @@ Reading the diagram left to right: raw video enters, YOLO26 finds *what* is in e
 
 **Why the LLM comes last, not first:** the pipeline deliberately does *not* feed raw video frames into a large language model and ask it to decide whether an event happened. The LLM never sees the frames. It only sees output that has already been produced by deterministic, auditable logic (detection → tracking → event rules). This means the LLM cannot hallucinate an event that didn't occur — it can only rephrase events that the earlier, verifiable stages already confirmed. The LLM is a *presentation* layer, not a *decision* layer.
 
----
-
 ## 3. What Problem Does IVA Actually Solve?
 
 - Raw video is **high-bandwidth and unstructured**. A one-minute clip at 30–60 fps can contain thousands of frames.
@@ -43,7 +41,8 @@ Reading the diagram left to right: raw video enters, YOLO26 finds *what* is in e
 
 - **The final goal is decision support — not bounding boxes.** Drawing a box around a detected person is only an intermediate representation. If a system stops at "here is a box with 92% confidence," it has *not* solved the smart-city problem. The problem is only solved once that detection has been converted into something an operator or downstream application can act on.
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8158224e-596b-47a5-b10b-ddd1ed1156e6" />
+
 
 ## 4. System View — One Table Summarizing the Whole Lecture
 
@@ -57,7 +56,8 @@ Each layer of the pipeline answers a specific question and produces a specific a
 | **Reporting** | What should the operator review? | `incident_report.txt` / `.json` |
 | **Performance** | Can the pipeline keep up? | `metrics.json` |
 
----
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/40c52638-c8cc-4836-bd96-e44c56e7d3a9" />
+
 
 ## 5. Part 1 — Detection: Frame-Level Perception
 
@@ -95,6 +95,8 @@ model = YOLO("yolo26n.pt")
 results = model("frame.jpg")
 ```
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a1cd17ae-8394-409a-9a43-82f44811a310" />
+
 **Important framing point:** in the demo, the detector's output is *not the final answer*. It is the *input* to the tracking stage and, eventually, to event logic. Nothing about the smart-city problem is considered "solved" just because boxes were drawn.
 
 ### 5.4 Detection output — what the next stage actually needs
@@ -109,6 +111,8 @@ results = model("frame.jpg")
 From the raw `x1, y1, x2, y2` box, the pipeline derives a **center point** — this is what actually gets tested against a restricted-zone polygon or checked against a virtual line, rather than the raw box itself.
 
 **Detection is the perception substrate of the entire system: every downstream semantic decision ultimately depends on these four low-level fields.**
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c1d91c31-23e4-4696-ad5d-c8bb6710f9de" />
 
 ### 5.5 Why detection cannot answer temporal questions
 
@@ -174,7 +178,8 @@ result = model.track(
 
 - **`persist=True`** is what keeps the tracker's internal state alive *across* frames — without it, the tracker would forget every track ID as soon as you moved to the next frame, defeating the entire purpose of tracking.
 
----
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/49ca3d48-1f7d-43c6-b275-5df718eff609" />
+
 
 ## 7. Key Takeaways from Parts 1 & 2
 
