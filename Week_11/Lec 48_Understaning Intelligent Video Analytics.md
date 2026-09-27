@@ -20,35 +20,7 @@ By the end of this session you should be able to:
 
 The whole system is a chain of specialized stages. Each stage has one job, produces one kind of output, and hands that output to the next stage. No single stage tries to do everything.
 
-```mermaid
-flowchart LR
-    A["Camera / Video Stream"] --> B["YOLO26 Object Detection"]
-    B --> C["Multi-Object Tracking"]
-    C --> D["Spatial & Temporal Analytics"]
-    D --> D1["Restricted-Zone Entry"]
-    D --> D2["Loitering / Dwell Time"]
-    D --> D3["Virtual-Line Crossing"]
-    D --> E["Structured Events (JSON)"]
-    E --> F["Incident Report"]
-    F --> G["Optional LLM Summary"]
-
-    subgraph Perception
-        A
-        B
-    end
-    subgraph Semantics
-        C
-        D
-        D1
-        D2
-        D3
-    end
-    subgraph "Decision Support"
-        E
-        F
-        G
-    end
-```
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/f6bfd4ac-2531-4942-b145-28d007a3efd6" />
 
 Reading the diagram left to right: raw video enters, YOLO26 finds *what* is in each frame, the tracker links those detections into persistent identities over *time*, spatial/temporal rules turn tracked movement into *application-level events* (someone entered a zone, someone loitered, a vehicle crossed a line), those events are serialized into JSON, a deterministic incident report is generated from the JSON, and — only as an optional last step — an LLM can turn that structured report into a natural-language summary.
 
