@@ -1,11 +1,5 @@
 # LLM Foundations & Terminology — Week 6, Segment 1
 
-*Study notes synthesized from the lecture slides and audio transcript: "Large Language Models: Foundation for Optimization and Fine-Tuning."*
-
-> **Note:** the title slide header reads "Week: 05," but the spoken introduction ("welcome to week six") and every later slide reference "Week 6" — likely a leftover label on the title slide rather than a real discrepancy.
-
-## Week 6 Roadmap
-
 This lecture is **Segment 1 of 5** for the week:
 
 | Segment | Topic |
@@ -26,8 +20,6 @@ This lecture is **Segment 1 of 5** for the week:
 6. Identify the main compute and memory bottlenecks in LLM training.
 7. Compare prompting, RAG, full fine-tuning, and PEFT at a high level.
 8. Connect these foundations to the remaining Week 6 segments.
-
----
 
 ## 1. What Makes a Model an "LLM"?
 
