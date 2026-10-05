@@ -53,32 +53,9 @@
 
 ---
 
-## 3️⃣ Interactive Precision Guide (2:45 – 11:05)
+## 3️⃣ Interactive Precision Guide 
 
-### Bit layouts
-
-```mermaid
-flowchart LR
-    subgraph FP32["FP32 · 32 bits"]
-        A1["1 sign"] --- A2["8 exponent"] --- A3["23 mantissa"]
-    end
-    subgraph BF16["BF16 · 16 bits"]
-        B1["1 sign"] --- B2["8 exponent"] --- B3["7 mantissa"]
-    end
-    subgraph FP16["FP16 · 16 bits"]
-        C1["1 sign"] --- C2["5 exponent"] --- C3["10 mantissa"]
-    end
-    subgraph TF32["TF32 · compute format"]
-        D1["1 sign"] --- D2["8 exponent"] --- D3["10 mantissa"]
-    end
-
-    style A2 fill:#e3f2fd,stroke:#1565c0
-    style B2 fill:#e3f2fd,stroke:#1565c0
-    style D2 fill:#e3f2fd,stroke:#1565c0
-    style C2 fill:#ffebee,stroke:#c62828
-```
-
-> 🔵 Blue = 8-bit exponent (FP32-like dynamic range). 🔴 Red = 5-bit exponent (narrow range, overflow risk).
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/76473431-0a69-4c7d-bcc7-8053b913c00d" />
 
 ### Data type reference
 
