@@ -32,6 +32,9 @@ An LLM is **not** just "a very big neural network." It's a **pretrained transfor
 
 Unlike a CNN or a typical smaller network — where you train once and deploy that same model — LLMs are so large in parameters *and* required training data that "training" almost never means training from scratch for each use case. Instead, you take an existing **pretrained** model and adapt it.
 
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/5eec965f-36b7-456a-973e-c7dd395700a7" />
+
+
 ## 2. From Raw Text to Next-Token Prediction
 
 The core task of an LLM: given prior tokens, predict a probability distribution over the next one.
@@ -49,6 +52,9 @@ The core task of an LLM: given prior tokens, predict a probability distribution 
 - The **context window** limits how many prior tokens are visible when predicting the next one.
 - Training repeats this pipeline over a massive corpus, across many token positions, over and over.
 
+- <img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/86086a9e-b4d4-4abf-8753-90b63cd33b82" />
+
+
 ## 3. Transformer Foundations: The Decoder Stack
 
 Transformers originate from *"Attention Is All You Need"* — worth reading directly for the original motivation behind self-attention.
@@ -59,17 +65,7 @@ A full transformer has **encoder** and **decoder** halves:
 
 **One decoder block:**
 
-```
-Input tokens + positions
-        ↓
-Masked multi-head self-attention
-        ↓
-Add & norm
-        ↓
-Feed-forward network (MLP)
-        ↓
-Add & norm → next layer
-```
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/0f3ef0ba-8df0-481b-8d56-12ee2d9dc8ab" />
 
 **Why it works:**
 - **Self-attention** lets each token mix in information from earlier tokens in the same sequence.
@@ -116,6 +112,9 @@ Bigger, more capable LLMs scale this exact same pattern up — **more heads, mor
 
 Pretraining at this scale is a huge undertaking — the lecture notes spend that can run into the **millions of dollars** and require **thousands of GPUs**. That's precisely why organizations essentially never pretrain from scratch for each new use case; they adapt an existing pretrained model instead.
 
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/ac86fc65-91a6-4ad8-9170-34fe58e79a2f" />
+
+
 ## 7. Why Fine-Tuning Is Still Needed After Pretraining
 
 Even a well-pretrained LLM usually needs adaptation because of:
@@ -132,6 +131,8 @@ Even a well-pretrained LLM usually needs adaptation because of:
 ## 8. Where the Cost Comes From in LLM Training
 
 Training memory is **not just the parameters** — it's a stack of:
+
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/ef2bc8f8-c94a-44e3-868e-604465d30ddc" />
 
 **Parameters + Gradients + Optimizer state + Activations**
 
@@ -170,6 +171,9 @@ Training memory is **not just the parameters** — it's a stack of:
 - LLMs are large transformer-based next-token models pretrained at scale.
 - Pretraining gives general capability; prompting, retrieval, and fine-tuning make the model useful for specific settings.
 - Week 6's efficiency methods matter because memory, attention cost, and optimizer overhead make naïve full fine-tuning expensive.
+
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/8d54bfda-b380-4a9c-8f86-60637882794e" />
+
 
 ## Quick Glossary
 
