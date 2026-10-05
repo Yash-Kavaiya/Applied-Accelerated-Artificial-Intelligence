@@ -16,6 +16,8 @@ Healthcare AI is **not a chatbot or a single model call**. It is a safety-critic
 
 A clinical AI output should answer: *What evidence supports this? How uncertain is it? Who reviews it? What is logged?*
 
+<img width="1448" height="1086" alt="image" src="https://github.com/user-attachments/assets/509d5cfc-8498-4c74-aef1-17da8401c422" />
+
 ## Data modalities
 
 | Modality | Examples | AI tasks |
@@ -38,6 +40,9 @@ Different modalities need different models and preprocessing (e.g., CNN/ViT for 
 - The demo uses a simplified FHIR-like JSON record, e.g. an `Observation` with code `oxygen-saturation` and value 91%.
 
 ## Part 1: Medical imaging AI
+
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/d9a43258-a4da-4be0-a9ce-3d19017845d3" />
+
 
 **Workflow:** DICOM/metadata → preprocessing → CNN/transformer → heatmap/mask → radiologist review → structured report (with logging and auditability).
 
@@ -73,12 +78,17 @@ Different modalities need different models and preprocessing (e.g., CNN/ViT for 
 
 **Chain:** EHR/FHIR → risk score → calibration → explanation → decision support.
 
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/df8c6011-efd2-4c31-9a5c-af773c0bddc4" />
+
+
 **Decision support loop:** clinical question and patient context → retrieve EHR/FHIR data (demographics, notes, labs, medications, vitals, imaging) → model inference → risk score with explanation (e.g., 28% 30-day readmission risk, with factors like recent hospitalization, elevated creatinine, heart failure history, age) → clinician **accepts or overrides (with reason noted)** → outcome monitoring (accuracy, calibration, fairness, safety, clinical impact) → model refinement, with updates controlled and revalidated.
 
 **Key points**
 - Inputs: age, diagnoses, medications, labs, vitals, prior utilization, text-derived features. Outputs: probability or risk category (readmission, deterioration, sepsis, adverse events, triage priority).
 - The model learns **statistical associations** from historical data. It doesn't understand medicine like a clinician, and association is not causation.
 - A 20% readmission risk doesn't mean "discharge or not." The useful question is how it should guide follow-up, resources and care given the clinical context.
+
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/aea94980-3a6c-4f54-ab0a-850d0de063bc" />
 
 **Calibration: probability must mean what it says**
 - **Discrimination ≠ calibration.** A model can rank patients correctly yet give misleading probabilities.
@@ -109,4 +119,5 @@ The next session covers **clinical NLP, RAG and controlled agents**, followed by
 3. Give two reasons a heatmap can't be treated as proof of correctness.
 4. What's the difference between discrimination and calibration?
 
-I can turn this into a quiz or flashcards if you'd like.
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/2b2bb4e8-3295-478f-a7bc-67ca2d5477f1" />
+
